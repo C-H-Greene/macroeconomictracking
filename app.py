@@ -565,8 +565,9 @@ def make_macro_heatmap(macro: dict):
         hovertemplate=f"GDP: {gdp_now:.1f}%<br>CPI: {inf_now:.1f}%<extra></extra>",
     ))
 
+    base = {k: v for k, v in PLOTLY_LAYOUT.items() if k not in ("xaxis", "yaxis")}
     fig.update_layout(
-        **PLOTLY_LAYOUT,
+        **base,
         title=dict(text="MACRO REGIME MAP — GDP vs INFLATION", font=dict(size=11), x=0.02),
         xaxis=dict(**PLOTLY_LAYOUT["xaxis"], title="Real GDP Growth (%)", range=[-4, 8]),
         yaxis=dict(**PLOTLY_LAYOUT["yaxis"], title="CPI Inflation (%)",   range=[0, 9]),
@@ -618,8 +619,9 @@ def make_sector_bar(price_df: pd.DataFrame, tilts: list):
         textfont=dict(family="IBM Plex Mono", size=10),
         hovertemplate="%{y}: %{x:.2f}%<extra></extra>",
     ))
+    base = {k: v for k, v in PLOTLY_LAYOUT.items() if k not in ("xaxis", "yaxis")}
     fig.update_layout(
-        **PLOTLY_LAYOUT,
+        **base,
         title=dict(text="3-MONTH SECTOR PERFORMANCE", font=dict(size=11), x=0.02),
         xaxis=dict(**PLOTLY_LAYOUT["xaxis"], title="3M Return (%)", zeroline=True,
                    zerolinecolor="#334155", zerolinewidth=1),
