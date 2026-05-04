@@ -509,9 +509,13 @@ PLOTLY_LAYOUT = dict(
     plot_bgcolor="#111318",
     font=dict(family="IBM Plex Mono", color="#94a3b8", size=11),
     margin=dict(l=10, r=10, t=30, b=10),
-    xaxis=dict(gridcolor="#1f2430", linecolor="#1f2430", zerolinecolor="#1f2430"),
-    yaxis=dict(gridcolor="#1f2430", linecolor="#1f2430", zerolinecolor="#1f2430"),
 )
+
+_AXIS_BASE = dict(gridcolor="#1f2430", linecolor="#1f2430", zerolinecolor="#1f2430")
+
+def axis(**kwargs) -> dict:
+    """Return a Plotly axis dict merging shared base style with overrides."""
+    return {**_AXIS_BASE, **kwargs}
 
 
 def make_macro_heatmap(macro: dict):
@@ -565,12 +569,11 @@ def make_macro_heatmap(macro: dict):
         hovertemplate=f"GDP: {gdp_now:.1f}%<br>CPI: {inf_now:.1f}%<extra></extra>",
     ))
 
-    base = {k: v for k, v in PLOTLY_LAYOUT.items() if k not in ("xaxis", "yaxis")}
     fig.update_layout(
-        **base,
+        **PLOTLY_LAYOUT,
         title=dict(text="MACRO REGIME MAP — GDP vs INFLATION", font=dict(size=11), x=0.02),
-        xaxis=dict(**PLOTLY_LAYOUT["xaxis"], title="Real GDP Growth (%)", range=[-4, 8]),
-        yaxis=dict(**PLOTLY_LAYOUT["yaxis"], title="CPI Inflation (%)",   range=[0, 9]),
+        xaxis=axis(title="Real GDP Growth (%)", range=[-4, 8]),
+        yaxis=axis(title="CPI Inflation (%)", range=[0, 9]),
         height=340,
     )
     return fig
@@ -619,12 +622,10 @@ def make_sector_bar(price_df: pd.DataFrame, tilts: list):
         textfont=dict(family="IBM Plex Mono", size=10),
         hovertemplate="%{y}: %{x:.2f}%<extra></extra>",
     ))
-    base = {k: v for k, v in PLOTLY_LAYOUT.items() if k not in ("xaxis", "yaxis")}
     fig.update_layout(
-        **base,
+        **PLOTLY_LAYOUT,
         title=dict(text="3-MONTH SECTOR PERFORMANCE", font=dict(size=11), x=0.02),
-        xaxis=dict(**PLOTLY_LAYOUT["xaxis"], title="3M Return (%)", zeroline=True,
-                   zerolinecolor="#334155", zerolinewidth=1),
+        xaxis=axis(title="3M Return (%)", zeroline=True, zerolinecolor="#334155", zerolinewidth=1),
         height=300,
     )
     return fig
