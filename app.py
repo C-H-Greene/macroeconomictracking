@@ -667,15 +667,22 @@ def make_drift_gauge(bucket: str, drift_info: dict):
     return fig
 
 
+def hex_to_rgba(hex_color: str, alpha: float = 0.07) -> str:
+    """Convert a #rrggbb hex string to rgba(r,g,b,alpha)."""
+    h = hex_color.lstrip("#")
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return f"rgba({r},{g},{b},{alpha})"
+
+
 def make_history_sparkline(series, label: str, color: str):
     recent = series.iloc[-40:]
+    fill_color = hex_to_rgba(color, 0.07) if color.startswith("#") else color
     fig = go.Figure(go.Scatter(
         x=recent.index, y=recent.values,
         mode="lines",
         line=dict(color=color, width=1.5),
         fill="tozeroy",
-        fillcolor=color.replace(")", ",0.07)").replace("rgb", "rgba") if "rgb" in color
-                  else f"{color}15",
+        fillcolor=fill_color,
         hovertemplate="%{x|%Y-%m}<br>%{y:.2f}<extra></extra>",
     ))
     fig.update_layout(
